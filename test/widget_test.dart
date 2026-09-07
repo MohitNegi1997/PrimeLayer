@@ -56,11 +56,14 @@ void main() {
     await tester.pump();
     expect(find.byType(AppLoader), findsOneWidget);
     await tester.pump(AppConstants.signInLoaderDuration);
-    await tester.pump();
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(find.text(AppConstants.appName), findsOneWidget);
-    expect(find.text('3D PRINTED ORIGINALS'), findsOneWidget);
+    expect(find.text(AppConstants.studioName), findsOneWidget);
+    expect(find.text('Dashboard'), findsWidgets);
+    expect(find.text('Order Management'), findsWidgets);
+    expect(find.text('Customers'), findsWidgets);
+    expect(find.text('Payments'), findsWidgets);
+    expect(find.text('No data yet'), findsOneWidget);
     expect(find.text(AdminCredentials.displayName), findsOneWidget);
     expect(find.text(AdminCredentials.email), findsWidgets);
   });
@@ -76,7 +79,7 @@ void main() {
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
 
-    expect(find.text('3D PRINTED ORIGINALS'), findsOneWidget);
+    expect(find.text(AppConstants.studioName), findsOneWidget);
     expect(find.widgetWithText(ElevatedButton, 'Sign in'), findsNothing);
   });
 
@@ -110,7 +113,7 @@ void main() {
     });
     await _pumpApp(tester);
 
-    expect(find.text('3D PRINTED ORIGINALS'), findsOneWidget);
+    expect(find.text(AppConstants.studioName), findsOneWidget);
     expect(find.widgetWithText(ElevatedButton, 'Sign in'), findsNothing);
   });
 
@@ -123,7 +126,7 @@ void main() {
     await _pumpApp(tester);
 
     expect(find.widgetWithText(ElevatedButton, 'Sign in'), findsOneWidget);
-    expect(find.text('3D PRINTED ORIGINALS'), findsNothing);
+    expect(find.text('Dashboard'), findsNothing);
   });
 }
 

@@ -4,26 +4,41 @@ import 'package:primelayer_admin_panel/core/constants/app_constants.dart';
 import 'package:primelayer_admin_panel/core/theme/theme_cubit.dart';
 import 'package:primelayer_admin_panel/core/utils/responsive.dart';
 import 'package:primelayer_admin_panel/core/widgets/app_logo.dart';
+import 'package:primelayer_admin_panel/features/dashboard/presentation/widgets/dashboard_side_panel.dart';
 import 'package:primelayer_admin_panel/features/dashboard/presentation/widgets/profile_menu_button.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
+  const DashboardPage({super.key, required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     final isDesktop = Responsive.isDesktop(context);
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
 
     return PopScope(
       canPop: false,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Row(
+          automaticallyImplyLeading: isMobile,
+          toolbarHeight: isDesktop ? 80 : 72,
+          titleSpacing: isMobile ? 0 : 16,
+          title: Row(
             children: [
-              AppLogo(size: 36),
-              SizedBox(width: 12),
-              Text(AppConstants.appName),
+              AppLogo(size: isDesktop ? 64 : 52),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Text(
+                  AppConstants.studioName,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: theme.appBarTheme.foregroundColor,
+                    letterSpacing: 0.6,
+                  ),
+                ),
+              ),
             ],
           ),
           actions: [
@@ -31,7 +46,7 @@ class DashboardPage extends StatelessWidget {
               tooltip: 'Toggle theme',
               onPressed: () => context.read<ThemeCubit>().toggle(),
               icon: Icon(
-                Theme.of(context).brightness == Brightness.dark
+                theme.brightness == Brightness.dark
                     ? Icons.light_mode_outlined
                     : Icons.dark_mode_outlined,
               ),
@@ -40,28 +55,15 @@ class DashboardPage extends StatelessWidget {
             const SizedBox(width: 8),
           ],
         ),
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(isDesktop ? 32 : 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AppLogo(size: isDesktop ? 180 : 140),
-                const SizedBox(height: 24),
-                Text(
-                  AppConstants.appName.toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '3D PRINTED ORIGINALS',
-                  textAlign: TextAlign.center,
-                  style: textTheme.titleSmall,
-                ),
-              ],
-            ),
-          ),
+        drawer: isMobile ? const Drawer(child: DashboardSidePanel()) : null,
+        body: Row(
+          children: [
+            if (!isMobile) ...[
+              const SizedBox(width: 260, child: DashboardSidePanel()),
+              VerticalDivider(width: 1, color: theme.dividerColor),
+            ],
+            Expanded(child: child),
+          ],
         ),
       ),
     );
