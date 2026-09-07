@@ -1,0 +1,27 @@
+---
+description: PrimeLayer Admin Panel defaults. Follow on every task without being asked.
+alwaysApply: true
+---
+
+# PrimeLayer Admin Panel
+
+Follow these rules on every prompt. Do not ask the user to repeat them. Do not restate them in replies.
+
+## Architecture
+- Feature-first clean architecture.
+- New screen = `lib/features/<name>/{data,domain,presentation}`.
+- Shared code only in `lib/core/`.
+- Copy existing files. Do not invent new patterns.
+
+## Must
+- State: Cubit or Bloc only. Never `setState`.
+- Routes: add to `lib/core/router/app_router.dart` and `route_names.dart`. Never `Navigator.push`.
+- Theme/fonts/colors: `lib/core/theme/` only. Never hardcode in widgets.
+- Responsive: `Responsive` helper or `responsive_framework`. Never raw width checks scattered in UI.
+- Imports: `package:primelayer_admin_panel/...` only. Never `../` or `./`.
+- Max 300 lines per file. Split if larger.
+- Keep it simple. No extra layers, packages, or abstractions unless required.
+
+## Agent output
+- Do the task only. Short replies. No README/docs/comments unless asked.
+- Prefer edit over new files. Do not duplicate code.

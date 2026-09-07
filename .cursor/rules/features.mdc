@@ -1,0 +1,24 @@
+---
+description: How to add or change a feature in this project.
+globs: "lib/features/**/*.dart"
+alwaysApply: false
+---
+
+# Features
+
+Folder layout:
+
+```
+lib/features/<feature>/
+  data/
+  domain/
+  presentation/
+    cubit/
+    pages/
+    widgets/
+```
+
+- Page = UI only. Cubit = logic. Domain = entities/use cases. Data = sources/repos.
+- Skip empty layers until needed (e.g. no data folder for static UI).
+- Register the page in `AppRouter` and `RouteNames` in the same change.
+- Feature widgets stay inside that feature. Shared widgets go to `lib/core/`.

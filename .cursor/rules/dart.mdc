@@ -1,0 +1,16 @@
+---
+description: Dart/Flutter code patterns for this project.
+globs: "**/*.dart"
+alwaysApply: false
+---
+
+# Dart
+
+- Widgets: `StatelessWidget` unless state is required, then Cubit.
+- Cubit file + state file. Use `equatable`. Provide via `BlocProvider` at the feature or app root.
+- Read cubit with `context.read<X>()`. Listen with `BlocBuilder` / `BlocListener`.
+- Navigation: `context.go(RouteNames.x)` or `context.push(RouteNames.x)`.
+- Colors: `AppColors.*`. Text: `Theme.of(context).textTheme` or `AppFonts`. Logo: `AppLogo` / `AppAssets.logo`.
+- Breakpoints: `Responsive.isMobile/isTablet/isDesktop(context)`.
+- One class per file. Constructor `const` when possible.
+- No print. No unused imports. No commented-out code.
