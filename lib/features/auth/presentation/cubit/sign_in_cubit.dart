@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:primelayer_admin_panel/core/constants/app_constants.dart';
 import 'package:primelayer_admin_panel/features/auth/data/admin_credentials.dart';
 import 'package:primelayer_admin_panel/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:primelayer_admin_panel/features/auth/presentation/cubit/sign_in_state.dart';
@@ -33,6 +34,8 @@ class SignInCubit extends Cubit<SignInState> {
   }
 
   Future<void> signIn() async {
+    if (state.status == SignInStatus.submitting) return;
+
     final email = state.email.trim();
     final password = state.password;
 
@@ -47,7 +50,11 @@ class SignInCubit extends Cubit<SignInState> {
     }
 
     if (AdminCredentials.matches(email: email, password: password)) {
+      emit(state.copyWith(status: SignInStatus.submitting, clearError: true));
+      await Future<void>.delayed(AppConstants.signInLoaderDuration);
+      if (isClosed) return;
       await _authCubit.persistSession();
+      if (isClosed) return;
       emit(state.copyWith(status: SignInStatus.success, clearError: true));
       return;
     }

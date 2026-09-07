@@ -5,6 +5,8 @@ import 'package:primelayer_admin_panel/core/constants/app_constants.dart';
 import 'package:primelayer_admin_panel/core/theme/app_theme.dart';
 import 'package:primelayer_admin_panel/core/theme/theme_cubit.dart';
 import 'package:primelayer_admin_panel/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:primelayer_admin_panel/features/splash/presentation/cubit/splash_cubit.dart';
+import 'package:primelayer_admin_panel/features/splash/presentation/widgets/splash_host.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class PrimeLayerAdminApp extends StatelessWidget {
@@ -23,6 +25,7 @@ class PrimeLayerAdminApp extends StatelessWidget {
       providers: [
         BlocProvider.value(value: authCubit),
         BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(create: (_) => SplashCubit()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
@@ -35,7 +38,7 @@ class PrimeLayerAdminApp extends StatelessWidget {
             routerConfig: router,
             builder: (context, child) {
               return ResponsiveBreakpoints.builder(
-                child: child ?? const SizedBox.shrink(),
+                child: SplashHost(child: child ?? const SizedBox.shrink()),
                 breakpoints: const [
                   Breakpoint(start: 0, end: 450, name: MOBILE),
                   Breakpoint(start: 451, end: 800, name: TABLET),

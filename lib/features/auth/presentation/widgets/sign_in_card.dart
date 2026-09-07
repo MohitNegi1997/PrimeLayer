@@ -97,7 +97,9 @@ class SignInCard extends StatelessWidget {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () => context.read<SignInCubit>().signIn(),
+                      onPressed: state.status == SignInStatus.submitting
+                          ? null
+                          : () => context.read<SignInCubit>().signIn(),
                       child: const Text('Sign in'),
                     ),
                   ),

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum SignInStatus { initial, success, failure }
+enum SignInStatus { initial, submitting, success, failure }
 
 class SignInState extends Equatable {
   const SignInState({
