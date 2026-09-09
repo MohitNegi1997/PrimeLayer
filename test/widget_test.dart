@@ -63,7 +63,10 @@ void main() {
     expect(find.text('Order Management'), findsWidgets);
     expect(find.text('Customers'), findsWidgets);
     expect(find.text('Payments'), findsWidgets);
-    expect(find.text('No data yet'), findsOneWidget);
+    expect(find.text('Revenue'), findsOneWidget);
+    expect(find.text('Orders by status'), findsOneWidget);
+    expect(find.text('Print floor'), findsOneWidget);
+    expect(find.text('Top products'), findsOneWidget);
     expect(find.text(AdminCredentials.displayName), findsOneWidget);
     expect(find.text(AdminCredentials.email), findsWidgets);
   });
