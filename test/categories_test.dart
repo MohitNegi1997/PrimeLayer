@@ -22,7 +22,7 @@ void main() {
 
   test('blocks delete when products are assigned', () {
     final cubit = CategoriesCubit();
-    cubit.delete('figurines');
+    cubit.delete('figurines', productCount: 1);
     expect(
       cubit.state.notice,
       'Move products out of Figurines before deleting it',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:primelayer_admin_panel/core/utils/responsive.dart';
+import 'package:primelayer_admin_panel/core/widgets/media_thumb.dart';
 import 'package:primelayer_admin_panel/features/categories/domain/category.dart';
 import 'package:primelayer_admin_panel/features/categories/domain/category_icons.dart';
 
@@ -8,6 +9,7 @@ class CategoryTile extends StatelessWidget {
     super.key,
     required this.category,
     required this.index,
+    required this.productCount,
     required this.showDragHandle,
     required this.onEdit,
     required this.onToggleVisibility,
@@ -16,6 +18,7 @@ class CategoryTile extends StatelessWidget {
 
   final Category category;
   final int index;
+  final int productCount;
   final bool showDragHandle;
   final VoidCallback onEdit;
   final ValueChanged<bool> onToggleVisibility;
@@ -25,9 +28,9 @@ class CategoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isMobile = Responsive.isMobile(context);
-    final productLabel = category.productCount == 1
+    final productLabel = productCount == 1
         ? '1 product'
-        : '${category.productCount} products';
+        : '$productCount products';
 
     return ListTile(
       onTap: onEdit,
@@ -43,10 +46,10 @@ class CategoryTile extends StatelessWidget {
                 color: theme.colorScheme.secondary,
               ),
             ),
-          CircleAvatar(
-            backgroundColor: theme.colorScheme.tertiary.withValues(alpha: 0.35),
-            foregroundColor: theme.colorScheme.primary,
-            child: Icon(CategoryIcons.data(category.iconKey)),
+          MediaThumb(
+            url: category.imageUrl,
+            bytes: category.imageBytes,
+            icon: CategoryIcons.data(category.iconKey),
           ),
         ],
       ),

@@ -18,6 +18,15 @@ abstract final class AppColors {
   static const Color secondaryDark = Color(0xFF7BA3C4);
   static const Color onDark = Color(0xFFEDF1FA);
 
+  static const Color warningSoft = Color(0xFFF3E6C4);
+  static const Color successSoft = Color(0xFFD5E8DC);
+  static const Color dangerSoft = Color(0xFFF0D6D8);
+  static const Color infoSoft = Color(0xFFD5E3F0);
+  static const Color warningSoftDark = Color(0xFF3F3A28);
+  static const Color successSoftDark = Color(0xFF274038);
+  static const Color dangerSoftDark = Color(0xFF3F2C32);
+  static const Color infoSoftDark = Color(0xFF2A3C52);
+
   static const ColorScheme lightScheme = ColorScheme.light(
     primary: primary,
     onPrimary: onPrimary,

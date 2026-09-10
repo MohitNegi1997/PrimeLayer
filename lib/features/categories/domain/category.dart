@@ -9,7 +9,9 @@ class Category extends Equatable {
     required this.iconKey,
     required this.isVisible,
     required this.sortOrder,
-    required this.productIds,
+    this.imageUrl,
+    this.imageBytes,
+    this.imageName,
   });
 
   final String id;
@@ -19,9 +21,9 @@ class Category extends Equatable {
   final String iconKey;
   final bool isVisible;
   final int sortOrder;
-  final List<String> productIds;
-
-  int get productCount => productIds.length;
+  final String? imageUrl;
+  final List<int>? imageBytes;
+  final String? imageName;
 
   Category copyWith({
     String? id,
@@ -31,7 +33,10 @@ class Category extends Equatable {
     String? iconKey,
     bool? isVisible,
     int? sortOrder,
-    List<String>? productIds,
+    String? imageUrl,
+    List<int>? imageBytes,
+    String? imageName,
+    bool clearImage = false,
   }) {
     return Category(
       id: id ?? this.id,
@@ -41,7 +46,9 @@ class Category extends Equatable {
       iconKey: iconKey ?? this.iconKey,
       isVisible: isVisible ?? this.isVisible,
       sortOrder: sortOrder ?? this.sortOrder,
-      productIds: productIds ?? this.productIds,
+      imageUrl: clearImage ? null : imageUrl ?? this.imageUrl,
+      imageBytes: clearImage ? null : imageBytes ?? this.imageBytes,
+      imageName: clearImage ? null : imageName ?? this.imageName,
     );
   }
 
@@ -54,6 +61,8 @@ class Category extends Equatable {
     iconKey,
     isVisible,
     sortOrder,
-    productIds,
+    imageUrl,
+    imageBytes,
+    imageName,
   ];
 }

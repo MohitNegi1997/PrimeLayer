@@ -6,12 +6,7 @@ import 'package:primelayer_admin_panel/features/categories/presentation/cubit/ca
 
 class CategoriesCubit extends Cubit<CategoriesState> {
   CategoriesCubit()
-    : super(
-        const CategoriesState(
-          categories: CategoriesSeed.categories,
-          products: CategoriesSeed.products,
-        ),
-      );
+    : super(const CategoriesState(categories: CategoriesSeed.categories));
 
   void searchChanged(String query) {
     emit(state.copyWith(query: query, clearNotice: true));
@@ -69,11 +64,11 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     emit(state.copyWith(categories: items, notice: '${category.name} saved'));
   }
 
-  void delete(String id) {
+  void delete(String id, {required int productCount}) {
     final matches = state.categories.where((item) => item.id == id);
     if (matches.isEmpty) return;
     final category = matches.first;
-    if (category.productIds.isNotEmpty) {
+    if (productCount > 0) {
       emit(
         state.copyWith(
           notice: 'Move products out of ${category.name} before deleting it',

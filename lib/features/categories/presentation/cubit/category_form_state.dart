@@ -13,7 +13,9 @@ class CategoryFormState extends Equatable {
     this.iconKey = CategoryIcons.category,
     this.isVisible = true,
     this.slugLocked = false,
-    this.productIds = const [],
+    this.imageUrl,
+    this.imageBytes,
+    this.imageName,
     this.existingSlugs = const [],
     this.status = CategoryFormStatus.initial,
     this.errorMessage,
@@ -26,7 +28,9 @@ class CategoryFormState extends Equatable {
   final String iconKey;
   final bool isVisible;
   final bool slugLocked;
-  final List<String> productIds;
+  final String? imageUrl;
+  final List<int>? imageBytes;
+  final String? imageName;
   final List<String> existingSlugs;
   final CategoryFormStatus status;
   final String? errorMessage;
@@ -42,7 +46,9 @@ class CategoryFormState extends Equatable {
       iconKey: iconKey,
       isVisible: isVisible,
       sortOrder: 0,
-      productIds: productIds,
+      imageUrl: imageUrl,
+      imageBytes: imageBytes,
+      imageName: imageName,
     );
   }
 
@@ -54,11 +60,14 @@ class CategoryFormState extends Equatable {
     String? iconKey,
     bool? isVisible,
     bool? slugLocked,
-    List<String>? productIds,
+    String? imageUrl,
+    List<int>? imageBytes,
+    String? imageName,
     List<String>? existingSlugs,
     CategoryFormStatus? status,
     String? errorMessage,
     bool clearError = false,
+    bool clearImage = false,
   }) {
     return CategoryFormState(
       id: id ?? this.id,
@@ -68,7 +77,9 @@ class CategoryFormState extends Equatable {
       iconKey: iconKey ?? this.iconKey,
       isVisible: isVisible ?? this.isVisible,
       slugLocked: slugLocked ?? this.slugLocked,
-      productIds: productIds ?? this.productIds,
+      imageUrl: clearImage ? null : imageUrl ?? this.imageUrl,
+      imageBytes: clearImage ? null : imageBytes ?? this.imageBytes,
+      imageName: clearImage ? null : imageName ?? this.imageName,
       existingSlugs: existingSlugs ?? this.existingSlugs,
       status: status ?? this.status,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
@@ -84,7 +95,9 @@ class CategoryFormState extends Equatable {
     iconKey,
     isVisible,
     slugLocked,
-    productIds,
+    imageUrl,
+    imageBytes,
+    imageName,
     existingSlugs,
     status,
     errorMessage,

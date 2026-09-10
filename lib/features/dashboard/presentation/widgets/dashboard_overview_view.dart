@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:primelayer_admin_panel/core/utils/responsive.dart';
+import 'package:primelayer_admin_panel/core/widgets/admin_chip_tone.dart';
+import 'package:primelayer_admin_panel/core/widgets/admin_page_scaffold.dart';
+import 'package:primelayer_admin_panel/core/widgets/admin_stat_metric.dart';
 import 'package:primelayer_admin_panel/features/dashboard/presentation/cubit/dashboard_overview_cubit.dart';
 import 'package:primelayer_admin_panel/features/dashboard/presentation/cubit/dashboard_overview_state.dart';
 import 'package:primelayer_admin_panel/features/dashboard/presentation/widgets/dashboard_chart_card.dart';
@@ -15,59 +18,72 @@ class DashboardOverviewView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = Responsive.isDesktop(context);
-    final isMobile = Responsive.isMobile(context);
-
     return BlocBuilder<DashboardOverviewCubit, DashboardOverviewState>(
       builder: (context, state) {
-        return SingleChildScrollView(
-          padding: EdgeInsets.all(isDesktop ? 24 : 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _header(context, state, isMobile),
-              const SizedBox(height: 16),
-              _chartGrid(state, isMobile),
-            ],
+        return AdminPageScaffold(
+          title: 'Overview',
+          subtitle: 'Track revenue, orders, and print floor load.',
+          actions: [
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: DashboardPeriodToggle(
+                period: state.period,
+                onChanged: context.read<DashboardOverviewCubit>().selectPeriod,
+              ),
+            ),
+          ],
+          stats: _stats(state),
+          child: SingleChildScrollView(
+            child: _chartGrid(state, Responsive.isMobile(context)),
           ),
         );
       },
     );
   }
 
-  Widget _header(
-    BuildContext context,
-    DashboardOverviewState state,
-    bool isMobile,
-  ) {
-    final theme = Theme.of(context);
-    final title = Text('Overview', style: theme.textTheme.titleLarge);
-    final toggle = FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: Alignment.centerRight,
-      child: DashboardPeriodToggle(
-        period: state.period,
-        onChanged: context.read<DashboardOverviewCubit>().selectPeriod,
-      ),
-    );
-
-    if (isMobile) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          title,
-          const SizedBox(height: 12),
-          Align(alignment: Alignment.centerLeft, child: toggle),
-        ],
-      );
+  List<AdminStatMetric> _stats(DashboardOverviewState state) {
+    var revenue = 0.0;
+    for (final point in state.revenue) {
+      revenue += point.value;
     }
-
-    return Row(
-      children: [
-        Expanded(child: title),
-        toggle,
-      ],
-    );
+    var orders = 0.0;
+    for (final point in state.orderStatus) {
+      orders += point.value;
+    }
+    var printing = 0.0;
+    for (final bar in state.printFloor) {
+      printing += bar.printing;
+    }
+    final top = state.topProducts.isEmpty ? '—' : state.topProducts.first.label;
+    return [
+      AdminStatMetric(
+        label: 'Total revenue',
+        value: '₹${revenue.toStringAsFixed(0)}',
+        caption: state.period.label,
+        icon: Icons.payments_outlined,
+        tone: AdminChipTone.success,
+      ),
+      AdminStatMetric(
+        label: 'Total orders',
+        value: orders.toStringAsFixed(0),
+        caption: 'By status',
+        icon: Icons.receipt_long_outlined,
+      ),
+      AdminStatMetric(
+        label: 'Printing',
+        value: printing.toStringAsFixed(0),
+        caption: 'On the floor',
+        icon: Icons.print_outlined,
+        tone: AdminChipTone.pending,
+      ),
+      AdminStatMetric(
+        label: 'Top product',
+        value: top,
+        caption: 'Best seller',
+        icon: Icons.star_outline,
+        tone: AdminChipTone.info,
+      ),
+    ];
   }
 
   Widget _chartGrid(DashboardOverviewState state, bool isMobile) {

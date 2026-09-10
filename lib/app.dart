@@ -5,8 +5,18 @@ import 'package:primelayer_admin_panel/core/constants/app_constants.dart';
 import 'package:primelayer_admin_panel/core/theme/app_theme.dart';
 import 'package:primelayer_admin_panel/core/theme/theme_cubit.dart';
 import 'package:primelayer_admin_panel/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:primelayer_admin_panel/features/categories/presentation/cubit/categories_cubit.dart';
+import 'package:primelayer_admin_panel/features/customers/presentation/cubit/customers_cubit.dart';
+import 'package:primelayer_admin_panel/features/orders/presentation/cubit/orders_cubit.dart';
+import 'package:primelayer_admin_panel/features/payments/presentation/cubit/payments_cubit.dart';
+import 'package:primelayer_admin_panel/features/print_queue/presentation/cubit/print_queue_cubit.dart';
+import 'package:primelayer_admin_panel/features/products/presentation/cubit/products_cubit.dart';
+import 'package:primelayer_admin_panel/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:primelayer_admin_panel/features/shipping/presentation/cubit/shipping_cubit.dart';
 import 'package:primelayer_admin_panel/features/splash/presentation/cubit/splash_cubit.dart';
 import 'package:primelayer_admin_panel/features/splash/presentation/widgets/splash_host.dart';
+import 'package:primelayer_admin_panel/features/users/presentation/cubit/users_cubit.dart';
+import 'package:primelayer_admin_panel/features/website/presentation/cubit/website_cubit.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class PrimeLayerAdminApp extends StatelessWidget {
@@ -26,6 +36,16 @@ class PrimeLayerAdminApp extends StatelessWidget {
         BlocProvider.value(value: authCubit),
         BlocProvider(create: (_) => ThemeCubit()),
         BlocProvider(create: (_) => SplashCubit()),
+        BlocProvider(create: (_) => CategoriesCubit()),
+        BlocProvider(create: (_) => ProductsCubit()),
+        BlocProvider(create: (_) => CustomersCubit()),
+        BlocProvider(create: (_) => OrdersCubit()),
+        BlocProvider(create: (_) => PaymentsCubit()),
+        BlocProvider(create: (_) => ShippingCubit()),
+        BlocProvider(create: (_) => PrintQueueCubit()),
+        BlocProvider(create: (_) => WebsiteCubit()),
+        BlocProvider(create: (_) => UsersCubit()),
+        BlocProvider(create: (_) => SettingsCubit()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

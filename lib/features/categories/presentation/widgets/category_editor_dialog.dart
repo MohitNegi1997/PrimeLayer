@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:primelayer_admin_panel/core/widgets/image_upload_field.dart';
 import 'package:primelayer_admin_panel/features/categories/domain/category.dart';
 import 'package:primelayer_admin_panel/features/categories/presentation/cubit/categories_cubit.dart';
 import 'package:primelayer_admin_panel/features/categories/presentation/cubit/category_form_cubit.dart';
 import 'package:primelayer_admin_panel/features/categories/presentation/cubit/category_form_state.dart';
 import 'package:primelayer_admin_panel/features/categories/presentation/widgets/category_icon_picker.dart';
-import 'package:primelayer_admin_panel/features/categories/presentation/widgets/category_product_picker.dart';
+import 'package:primelayer_admin_panel/features/products/presentation/cubit/products_cubit.dart';
+import 'package:primelayer_admin_panel/features/products/presentation/cubit/products_state.dart';
 
 class CategoryEditorDialog extends StatelessWidget {
   const CategoryEditorDialog({super.key});
@@ -23,6 +25,7 @@ class CategoryEditorDialog extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider.value(value: cubit),
+            BlocProvider.value(value: context.read<ProductsCubit>()),
             BlocProvider(
               create: (_) => CategoryFormCubit(
                 category: category,
@@ -78,12 +81,14 @@ class CategoryEditorDialog extends StatelessWidget {
                         Text('Icon', style: theme.textTheme.titleMedium),
                         const SizedBox(height: 8),
                         _iconPicker(),
+                        const SizedBox(height: 16),
+                        _imageField(),
                         const SizedBox(height: 8),
                         _visibilitySwitch(),
                         const SizedBox(height: 8),
                         Text('Products', style: theme.textTheme.titleMedium),
                         const SizedBox(height: 8),
-                        _productPicker(),
+                        _assignedProducts(),
                       ],
                     ),
                   ),
@@ -148,6 +153,24 @@ class CategoryEditorDialog extends StatelessWidget {
     );
   }
 
+  Widget _imageField() {
+    return BlocBuilder<CategoryFormCubit, CategoryFormState>(
+      buildWhen: (previous, current) =>
+          previous.imageBytes != current.imageBytes ||
+          previous.imageUrl != current.imageUrl,
+      builder: (context, state) {
+        final cubit = context.read<CategoryFormCubit>();
+        return ImageUploadField(
+          label: 'Category image',
+          url: state.imageUrl,
+          bytes: state.imageBytes,
+          onPicked: cubit.imageChanged,
+          onCleared: cubit.imageCleared,
+        );
+      },
+    );
+  }
+
   Widget _visibilitySwitch() {
     return BlocBuilder<CategoryFormCubit, CategoryFormState>(
       buildWhen: (previous, current) => previous.isVisible != current.isVisible,
@@ -162,14 +185,34 @@ class CategoryEditorDialog extends StatelessWidget {
     );
   }
 
-  Widget _productPicker() {
-    return BlocBuilder<CategoryFormCubit, CategoryFormState>(
-      buildWhen: (previous, current) =>
-          previous.productIds != current.productIds,
+  Widget _assignedProducts() {
+    return BlocBuilder<ProductsCubit, ProductsState>(
       builder: (context, state) {
-        return CategoryProductPicker(
-          products: context.read<CategoriesCubit>().state.products,
-          selectedIds: state.productIds,
+        final theme = Theme.of(context);
+        final categoryId = context.read<CategoryFormCubit>().state.id;
+        if (categoryId == null) {
+          return Text(
+            'Save this category, then assign products from Product Management',
+            style: theme.textTheme.bodyMedium,
+          );
+        }
+        final products = state.productsInCategory(categoryId);
+        if (products.isEmpty) {
+          return Text(
+            'No products in this category',
+            style: theme.textTheme.bodyMedium,
+          );
+        }
+        return Column(
+          children: [
+            for (final product in products)
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: Text(product.name),
+                subtitle: Text(product.variantLabel),
+              ),
+          ],
         );
       },
     );

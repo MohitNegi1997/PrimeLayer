@@ -15,7 +15,9 @@ class CategoryFormCubit extends Cubit<CategoryFormState> {
                 iconKey: category.iconKey,
                 isVisible: category.isVisible,
                 slugLocked: true,
-                productIds: category.productIds,
+                imageUrl: category.imageUrl,
+                imageBytes: category.imageBytes,
+                imageName: category.imageName,
                 existingSlugs: existingSlugs,
               ),
       );
@@ -74,16 +76,21 @@ class CategoryFormCubit extends Cubit<CategoryFormState> {
     );
   }
 
-  void toggleProduct(String productId) {
-    final selected = [...state.productIds];
-    if (selected.contains(productId)) {
-      selected.remove(productId);
-    } else {
-      selected.add(productId);
-    }
+  void imageChanged(List<int> bytes, String name) {
     emit(
       state.copyWith(
-        productIds: selected,
+        imageBytes: bytes,
+        imageName: name,
+        status: CategoryFormStatus.initial,
+        clearError: true,
+      ),
+    );
+  }
+
+  void imageCleared() {
+    emit(
+      state.copyWith(
+        clearImage: true,
         status: CategoryFormStatus.initial,
         clearError: true,
       ),
