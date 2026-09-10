@@ -4,6 +4,7 @@ import 'package:primelayer_admin_panel/core/router/go_router_refresh_stream.dart
 import 'package:primelayer_admin_panel/core/router/route_names.dart';
 import 'package:primelayer_admin_panel/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:primelayer_admin_panel/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:primelayer_admin_panel/features/categories/presentation/pages/categories_page.dart';
 import 'package:primelayer_admin_panel/features/dashboard/presentation/pages/dashboard_overview_page.dart';
 import 'package:primelayer_admin_panel/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:primelayer_admin_panel/features/dashboard/presentation/widgets/dashboard_nav_destination.dart';
@@ -50,8 +51,12 @@ abstract final class AppRouter {
                     GoRoute(
                       path: item.pathSegment,
                       name: item.pathSegment,
-                      builder: (context, state) =>
-                          SectionPlaceholder(destination: item),
+                      builder: (context, state) {
+                        if (item.route == RouteNames.categories) {
+                          return const CategoriesPage();
+                        }
+                        return SectionPlaceholder(destination: item);
+                      },
                     ),
                 GoRoute(
                   path: 'profile-settings',

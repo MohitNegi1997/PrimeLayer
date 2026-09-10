@@ -1,0 +1,92 @@
+import 'package:equatable/equatable.dart';
+import 'package:primelayer_admin_panel/features/categories/domain/category.dart';
+import 'package:primelayer_admin_panel/features/categories/domain/category_icons.dart';
+
+enum CategoryFormStatus { initial, success }
+
+class CategoryFormState extends Equatable {
+  const CategoryFormState({
+    this.id,
+    this.name = '',
+    this.slug = '',
+    this.description = '',
+    this.iconKey = CategoryIcons.category,
+    this.isVisible = true,
+    this.slugLocked = false,
+    this.productIds = const [],
+    this.existingSlugs = const [],
+    this.status = CategoryFormStatus.initial,
+    this.errorMessage,
+  });
+
+  final String? id;
+  final String name;
+  final String slug;
+  final String description;
+  final String iconKey;
+  final bool isVisible;
+  final bool slugLocked;
+  final List<String> productIds;
+  final List<String> existingSlugs;
+  final CategoryFormStatus status;
+  final String? errorMessage;
+
+  bool get isEditing => id != null;
+
+  Category toCategory() {
+    return Category(
+      id: id ?? 'cat-${DateTime.now().microsecondsSinceEpoch}',
+      name: name.trim(),
+      slug: slug.trim(),
+      description: description.trim(),
+      iconKey: iconKey,
+      isVisible: isVisible,
+      sortOrder: 0,
+      productIds: productIds,
+    );
+  }
+
+  CategoryFormState copyWith({
+    String? id,
+    String? name,
+    String? slug,
+    String? description,
+    String? iconKey,
+    bool? isVisible,
+    bool? slugLocked,
+    List<String>? productIds,
+    List<String>? existingSlugs,
+    CategoryFormStatus? status,
+    String? errorMessage,
+    bool clearError = false,
+  }) {
+    return CategoryFormState(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      slug: slug ?? this.slug,
+      description: description ?? this.description,
+      iconKey: iconKey ?? this.iconKey,
+      isVisible: isVisible ?? this.isVisible,
+      slugLocked: slugLocked ?? this.slugLocked,
+      productIds: productIds ?? this.productIds,
+      existingSlugs: existingSlugs ?? this.existingSlugs,
+      status: status ?? this.status,
+      errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    id,
+    name,
+    slug,
+    description,
+    iconKey,
+    isVisible,
+    slugLocked,
+    productIds,
+    existingSlugs,
+    status,
+    errorMessage,
+  ];
+}
